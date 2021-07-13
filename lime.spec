@@ -19,6 +19,7 @@ BuildRequires:	bctoolbox-devel >= 0.5.1
 BuildRequires:	cmake >= 3.1
 %{?with_apidocs:BuildRequires:	doxygen}
 BuildRequires:	libsoci-devel
+BuildRequires:	libsoci-sqlite3-devel
 BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.605
