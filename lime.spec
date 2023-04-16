@@ -6,21 +6,21 @@
 Summary:	Instant Messaging Encryption library with Whipsper System Sesame, Double Ratchet and X3DH protocols
 Summary(pl.UTF-8):	Biblioteka szyfrowania komunikacji z protokołami Whipsper System Sesame, Double Ratchet oraz X3DH
 Name:		lime
-Version:	4.5.22
+Version:	5.2.51
 Release:	1
 License:	GPL v3+
 Group:		Libraries
 #Source0Download: https://gitlab.linphone.org/BC/public/lime/-/tags
 Source0:	https://gitlab.linphone.org/BC/public/lime/-/archive/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	72bc6a4087c02ff5ab5d5c2b540be899
-URL:		http://www.linphone.org/technical-corner/lime
+# Source0-md5:	709f036e8c238b9797cf7a2d1aad0d6e
+URL:		https://www.linphone.org/technical-corner/lime
 # base+tester components
 BuildRequires:	bctoolbox-devel >= 0.5.1
 BuildRequires:	cmake >= 3.1
 %{?with_apidocs:BuildRequires:	doxygen}
 BuildRequires:	libsoci-devel
 BuildRequires:	libsoci-sqlite3-devel
-BuildRequires:	libstdc++-devel >= 6:4.7
+BuildRequires:	libstdc++-devel >= 6:5
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -55,7 +55,7 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	bctoolbox-devel >= 0.5.1
 Requires:	libsoci-devel
-Requires:	libstdc++-devel
+Requires:	libstdc++-devel >= 6:5
 
 %description devel
 Header files for LIME library.
@@ -110,6 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__sed} -i -e '/^foreach(target .*IMPORT_CHECK_TARGETS/,/^endforeach/d; /^unset(_IMPORT_CHECK_TARGETS)/d' $RPM_BUILD_ROOT%{_datadir}/lime/cmake/limeTargets.cmake
 
 # omitted by cmake install
+[ ! -f $RPM_BUILD_ROOT%{_pkgconfigdir}/lime.pc ] || exit 1
 install -d $RPM_BUILD_ROOT%{_pkgconfigdir}
 %{__sed} -i -e 's,@CMAKE_INSTALL_PREFIX@,%{_prefix},' \
 	-e 's,@PROJECT_NAME@,%{name},' \
@@ -120,7 +121,7 @@ install -d $RPM_BUILD_ROOT%{_pkgconfigdir}
 	lime.pc.in >$RPM_BUILD_ROOT%{_pkgconfigdir}/lime.pc
 
 # packaged as %doc
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/lime-4.5.0
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/lime-5.2.0
 
 %clean
 rm -rf $RPM_BUILD_ROOT
