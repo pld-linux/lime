@@ -16,6 +16,8 @@ Source0:	https://gitlab.linphone.org/BC/public/lime/-/archive/%{version}/%{name}
 URL:		https://www.linphone.org/technical-corner/lime
 # base+tester components
 BuildRequires:	bctoolbox-devel >= 0.5.1
+# for tester
+BuildRequires:	belle-sip-devel
 BuildRequires:	cmake >= 3.1
 %{?with_apidocs:BuildRequires:	doxygen}
 BuildRequires:	libsoci-devel
