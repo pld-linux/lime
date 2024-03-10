@@ -6,25 +6,26 @@
 Summary:	Instant Messaging Encryption library with Whipsper System Sesame, Double Ratchet and X3DH protocols
 Summary(pl.UTF-8):	Biblioteka szyfrowania komunikacji z protokołami Whipsper System Sesame, Double Ratchet oraz X3DH
 Name:		lime
-Version:	5.2.51
+Version:	5.3.29
 Release:	1
 License:	GPL v3+
 Group:		Libraries
 #Source0Download: https://gitlab.linphone.org/BC/public/lime/-/tags
 Source0:	https://gitlab.linphone.org/BC/public/lime/-/archive/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	709f036e8c238b9797cf7a2d1aad0d6e
+# Source0-md5:	eb2c0ed80c9332d925fc7087190e3b12
 URL:		https://www.linphone.org/technical-corner/lime
 # base+tester components
-BuildRequires:	bctoolbox-devel >= 0.5.1
+BuildRequires:	bctoolbox-devel >= 5.3.0
 # for tester
 BuildRequires:	belle-sip-devel
-BuildRequires:	cmake >= 3.1
+BuildRequires:	cmake >= 3.22
 %{?with_apidocs:BuildRequires:	doxygen}
 BuildRequires:	libsoci-devel
 BuildRequires:	libsoci-sqlite3-devel
-BuildRequires:	libstdc++-devel >= 6:5
+BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.605
+Requires:	bctoolbox >= 5.3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -55,9 +56,9 @@ Summary:	Header files for LIME library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki LIME
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	bctoolbox-devel >= 0.5.1
+Requires:	bctoolbox-devel >= 5.3.0
 Requires:	libsoci-devel
-Requires:	libstdc++-devel >= 6:5
+Requires:	libstdc++-devel >= 6:7
 
 %description devel
 Header files for LIME library.
@@ -93,23 +94,31 @@ Dokumentacja API biblioteki LIME.
 %setup -q
 
 %build
-install -d builddir
-cd builddir
-%cmake .. \
+%if %{with static_libs}
+%cmake -B builddir-static \
+	-DBUILD_SHARED_LIBS=OFF \
 	-DENABLE_C_INTERFACE=ON \
-	%{?with_apidocs:-DENABLE_DOC=ON} \
-	%{!?with_static_libs:-DENABLE_STATIC=OFF}
+	-DENABLE_UNIT_TESTS=OFF
 
-%{__make}
+%{__make} -C builddir-static
+%endif
+
+%cmake -B builddir \
+	-DENABLE_C_INTERFACE=ON \
+	%{?with_apidocs:-DENABLE_DOC=ON}
+
+%{__make} -C builddir
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with static_libs}
+%{__make} -C builddir-static install \
+	DESTDIR=$RPM_BUILD_ROOT
+%endif
+
 %{__make} -C builddir install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-# disable completeness check incompatible with split packaging
-%{__sed} -i -e '/^foreach(target .*IMPORT_CHECK_TARGETS/,/^endforeach/d; /^unset(_IMPORT_CHECK_TARGETS)/d' $RPM_BUILD_ROOT%{_datadir}/lime/cmake/limeTargets.cmake
 
 # omitted by cmake install
 [ ! -f $RPM_BUILD_ROOT%{_pkgconfigdir}/lime.pc ] || exit 1
@@ -123,7 +132,7 @@ install -d $RPM_BUILD_ROOT%{_pkgconfigdir}
 	lime.pc.in >$RPM_BUILD_ROOT%{_pkgconfigdir}/lime.pc
 
 # packaged as %doc
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/lime-5.2.0
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/lime-5.3.0
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -134,7 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS.md CHANGELOG.md README.md
-%attr(755,root,root) %{_bindir}/lime_tester
+%attr(755,root,root) %{_bindir}/lime-tester
 %attr(755,root,root) %{_libdir}/liblime.so.0
 %{_datadir}/lime_tester
 
@@ -143,8 +152,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/liblime.so
 %{_includedir}/lime
 %{_pkgconfigdir}/lime.pc
-%dir %{_datadir}/lime
-%{_datadir}/lime/cmake
+%dir %{_datadir}/Lime
+%{_datadir}/Lime/cmake
 
 %if %{with static_libs}
 %files static
