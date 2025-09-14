@@ -6,13 +6,13 @@
 Summary:	Instant Messaging Encryption library with Whipsper System Sesame, Double Ratchet and X3DH protocols
 Summary(pl.UTF-8):	Biblioteka szyfrowania komunikacji z protokołami Whipsper System Sesame, Double Ratchet oraz X3DH
 Name:		lime
-Version:	5.4.17
+Version:	5.4.38
 Release:	1
 License:	GPL v3+
 Group:		Libraries
 #Source0Download: https://gitlab.linphone.org/BC/public/lime/-/tags
 Source0:	https://gitlab.linphone.org/BC/public/lime/-/archive/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	6c5b234c2bbfa20d761f13d898c904c8
+# Source0-md5:	7256775caf25405345bad79879f0c0f2
 URL:		https://www.linphone.org/technical-corner/lime
 # base+tester components
 BuildRequires:	bctoolbox-devel >= 5.3.0
